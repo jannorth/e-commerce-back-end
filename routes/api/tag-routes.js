@@ -1,31 +1,20 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
-
-// finad all
+// GET all tags
 router.get('/', (req, res) => {
   Tag.findAll({
-    include: [
-      {
-        model: Product,
-        through: ProductTag
-      }
-    ]
+    include: [{ model: Product, through: ProductTag }]
   })
     .then(tags => res.status(200).json(tags))
     .catch(err => res.status(500).json(err));
 });
 
-// find one
+// GET one tag by id
 router.get('/:id', (req, res) => {
   Tag.findOne({
     where: { id: req.params.id },
-    include: [
-      {
-        model: Product,
-        through: ProductTag
-      }
-    ]
+    include: [{ model: Product, through: ProductTag }]
   })
     .then(tag => {
       if (!tag) {
@@ -37,7 +26,7 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
-// create tag
+// CREATE a new tag
 router.post('/', async (req, res) => {
   try {
     const tag = await Tag.create(req.body);
@@ -48,16 +37,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// update tag using id
+// UPDATE a tag by id
 router.put('/:id', (req, res) => {
   Tag.update(
     {
       tag_name: req.body.tag_name
     },
     {
-      where: {
-        id: req.params.id
-      }
+      where: { id: req.params.id }
     }
   )
     .then(rowsUpdated => {
@@ -70,12 +57,10 @@ router.put('/:id', (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
-// delete tag
+// DELETE a tag by id
 router.delete('/:id', (req, res) => {
   Tag.destroy({
-    where: {
-      id: req.params.id
-    }
+    where: { id: req.params.id }
   })
     .then(rowsDeleted => {
       if (rowsDeleted === 0) {
